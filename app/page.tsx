@@ -1,69 +1,116 @@
-import Image from "next/image";
+import Link from "next/link";
+import LogoMark from "@/components/LogoMark";
+import UploadCard from "@/components/UploadCard";
+import { EmptyState } from "@/components/ListingGrid";
+import {
+  byCategory,
+  featured,
+  sections,
+  toCard,
+  type Category,
+} from "@/lib/content";
+import { site } from "@/lib/site";
+
+// Order of the sections on the home page
+const order: Category[] = ["presentation", "document", "infographic"];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      {/* Intro (DRAFT TEXT: replace with your own words) */}
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-8 pt-14 sm:px-6 md:grid-cols-[1.4fr_1fr] md:pt-20">
+        <div>
+          <p className="text-sm font-medium text-coral">
+            For B.Pharm and Pharm.D students
           </p>
+          <h1 className="mt-3 text-4xl font-semibold leading-[1.1] sm:text-5xl">
+            Clear notes for pharmacy students, straight from the classroom.
+          </h1>
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
+            I&apos;m {site.author.name},{" "}
+            {site.author.role.split(",")[0].toLowerCase()} of pharmacy practice.
+            These are the slides and notes I teach with, free to read here or
+            download. No sign-up needed.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/presentations"
+              className="rounded-full bg-deep px-6 py-3 text-sm font-semibold text-paper hover:bg-deep-dark"
+            >
+              Browse presentations
+            </Link>
+            <Link
+              href="/about"
+              className="rounded-full border border-deep px-6 py-3 text-sm font-semibold text-deep hover:bg-deep hover:text-paper"
+            >
+              About me
+            </Link>
+          </div>
+          <dl className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+            {order.map((c) => (
+              <div key={c} className="flex items-baseline gap-1.5">
+                <dt className="sr-only">{sections[c].title}</dt>
+                <dd className="font-display text-2xl font-semibold text-deep">
+                  {byCategory(c).length}
+                </dd>
+                <dd className="text-muted">
+                  {(byCategory(c).length === 1
+                    ? sections[c].singular
+                    : sections[c].title
+                  ).toLowerCase()}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="relative hidden md:block" aria-hidden="true">
+          <div className="absolute inset-6 rounded-full bg-coral-soft/70 blur-2xl" />
+          <LogoMark className="relative mx-auto w-full max-w-sm text-deep" />
         </div>
-      </main>
-    </div>
+      </section>
+
+      {order.map((c) => {
+        const s = sections[c];
+        const items = featured(c, 6).map(toCard);
+        return (
+          <section
+            key={c}
+            className="mx-auto max-w-6xl px-4 pt-14 sm:px-6"
+            aria-labelledby={`h-${c}`}
+          >
+            <div className="mb-6 flex items-end justify-between gap-4 border-b border-line pb-3">
+              <div>
+                <h2 id={`h-${c}`} className="text-2xl font-semibold">
+                  {s.title}
+                </h2>
+                <p className="mt-1 text-sm text-muted">{s.blurb}</p>
+              </div>
+              {items.length > 0 && (
+                <Link
+                  href={s.path}
+                  className="shrink-0 text-sm font-semibold text-deep hover:text-coral"
+                >
+                  Check more <span aria-hidden="true">→</span>
+                </Link>
+              )}
+            </div>
+            {items.length === 0 ? (
+              <EmptyState text={s.empty} />
+            ) : (
+              <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((item, i) => (
+                  <li key={item.url}>
+                    <UploadCard
+                      item={item}
+                      priority={c === "presentation" && i < 3}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        );
+      })}
+    </>
   );
 }

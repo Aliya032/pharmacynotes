@@ -1,26 +1,81 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------------------------------------------
+   Pharmacy Notes theme
+   Brand palette (from the logo kit):
+     warm white #f3ede6 · coral #d97f6c · care teal #12b8b0 · deep teal #195a5f
+   Supporting colours: #9e2a2a (error) · #fe5955 · #20d0ce · #125872
+   ------------------------------------------------------------------ */
+@theme {
+  --color-paper: #f3ede6; /* page background (warm white) */
+  --color-card: #fbf8f4; /* cards sit slightly lighter than the page */
+  --color-line: #e4dbd0; /* hairline borders */
+  --color-ink: #1d3335; /* body text: a very dark deep-teal */
+  --color-muted: #5b6b6c; /* secondary text */
+
+  --color-coral: #d97f6c;
+  --color-coral-soft: #f4dcd5;
+  --color-teal: #12b8b0; /* care teal */
+  --color-teal-soft: #d3efed;
+  --color-deep: #195a5f; /* deep teal: headings, buttons, logo */
+  --color-deep-dark: #125872;
+  --color-bright-teal: #20d0ce;
+  --color-bright-coral: #fe5955;
+  --color-danger: #9e2a2a;
+
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    "Poppins", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  color: var(--color-deep);
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: var(--color-teal-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+/* Shimmer used by loading skeletons */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #ece4da;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
 }
